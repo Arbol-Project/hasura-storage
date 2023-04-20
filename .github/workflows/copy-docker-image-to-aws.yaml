@@ -5,10 +5,9 @@ env:
   CONTAINER_NAME: nhost/hasura-storage
 
 on:
-  workflow_call:
-    secrets:
-      AWS_ACCOUNT_ID:
-        required: true
+  push:
+    branches:
+      - main
 
 jobs:
   push-docker-manifest-aws:
@@ -26,14 +25,15 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-nhost-${{ github.event.repository.name }}
-          aws-region: eu-central-1
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      - run: |
+      - name: Run Build and Push
+        run: |
           export VERSION=$(make get-version)
-          export ECR_CONTAINER_NAME=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/hasura-storage
+          export ECR_CONTAINER_NAME=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/hasura-storage
 
           docker pull $CONTAINER_NAME:$VERSION-x86_64
           docker tag $CONTAINER_NAME:$VERSION-x86_64 $ECR_CONTAINER_NAME:$VERSION-x86_64

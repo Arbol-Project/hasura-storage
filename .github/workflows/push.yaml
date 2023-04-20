@@ -1,8 +1,9 @@
 ---
 name: "push: Run tests and linters"
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - fake-branch
 jobs:
   tests:
     uses: nhost/hasura-storage/.github/workflows/test.yaml@main

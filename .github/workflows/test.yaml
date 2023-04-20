@@ -2,10 +2,9 @@
 name: Run tests and linters
 
 on:
-  workflow_call:
-    secrets:
-      CACHIX_AUTH_TOKEN:
-        required: true
+  push:
+    branches:
+      - fake-branch
 
 
 jobs:

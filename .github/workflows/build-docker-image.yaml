@@ -1,15 +1,20 @@
 ---
 name: Build containers
 
+# on:
+#   workflow_call:
+#     secrets:
+#       DOCKER_USERNAME:
+#         required: true
+#       DOCKER_PASSWORD:
+#         required: true
+#       CACHIX_AUTH_TOKEN:
+#         required: true
+
 on:
-  workflow_call:
-    secrets:
-      DOCKER_USERNAME:
-        required: true
-      DOCKER_PASSWORD:
-        required: true
-      CACHIX_AUTH_TOKEN:
-        required: true
+  push:
+    branches:
+      - fake-branch
 
 env:
   CONTAINER_NAME: nhost/hasura-storage
